@@ -43,59 +43,41 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div>
-                    <div data-ng-repeat="lista in listas">
-                        <div class="ListaPrincipal" data-ng-repeat="sublista in lista ">
-                            <br />
-                            <div class="col-sm-12">
-                                <div data-ng-show="cargando" class="progress progress-striped active">
-                                    <div class="progress-bar" style="width: 100%"></div>
+                <div class="Items">
+                    <div class="row Item" data-ng-class="setClass($index, item)" data-ng-repeat="_enlace in (enlaces| myFilter:3)">
+                        <div class="col-sm-4" data-ng-repeat="enlace in (enlaces | mySecondFilter:_enlace:3 | filter:search)">
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h3>{{enlace.nombre}}</h3>
                                 </div>
-                                <h1>{{sublista.h2.text}}</h1>
-                                <hr />
-                            </div>
-                                <div class="Items" data-ng-repeat="item in (sublista.ul)">
-                                    <div class="row Item" data-ng-class="setClass($index, item)" data-ng-repeat="ExtrasubItem in (item | myFilter:3)">
-                                        <div class="col-sm-4" data-ng-repeat="subItem in (item | mySecondFilter:ExtrasubItem:3 | filter:search)">
-                                            <div class="panel">
-                                                <div class="panel-heading">
-                                                    @*<h3>{{subItem.a.text}}</h3>*@
-                                                    <h3>{{enlace.nombre}}</h3>
+                                <div class="panel-body row">
+                                    <div class="col-sm-3">
+                                        <a href="{{enlace.link}}" class="btn">Visitar Enlace</a>
+                                    </div>
+                                    <div class="puntuacion pull-right col-sm-7 col-sm-offset-1">
+                                        <span style="font-size: 2em; vertical-align: middle;" class="puntuacion">{{ enlace.puntuacion / enlace.numeroPuntuaciones | number:1}} <small style="font-size: .5em;">pts.</small></span>
+                                        <button class="btn btn-primary puntuar">Puntuar</button>
+                                    </div>
+                                </div>
+                                <div class="panel-body puntuando">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <a data-ng-click="enviarPuntuacion($event)" class="btn puntuar">Puntuar</a>
+                                        </div>
+                                        <div class="puntuacion col-sm-9 col-sm-offset-1">
+                                            <div class="row">
+                                                <div class="col-sm-5">
+                                                    <span style="font-size: 2em;" class="puntuacion">10<small style="font-size: .5em;">pts.</small></span>
                                                 </div>
-                                                <div class="panel-body row">
-                                                    <div class="col-sm-3">
-                                                    @*<a href="{{subItem.a.href}}" class="btn">Visitar Enlace</a>*@
-                                                        <a href="{{enlace.link}}" class="btn">Visitar Enlace</a>
-                                                    </div>
-                                                    <div class="puntuacion pull-right col-sm-7 col-sm-offset-1">
-                                                       @*<span style="font-size: 2em; vertical-align: middle;" class="puntuacion">7.90 <small style="font-size:.5em;">pts.</small></span>*@
-                                                       <span style="font-size: 2em; vertical-align: middle;" class="puntuacion">{{enlace.puntuacion}} <small style="font-size:.5em;">pts.</small></span>
-                                                       <button class="btn btn-primary puntuar">Puntuar</button>
-                                                    </div>
-                                                </div>
-                                                <div class="panel-body puntuando">
-                                                    <div class="row">
-                                                    <div class="col-sm-2">
-                                                    <a data-ng-click="enviarPuntuacion($event)" class="btn puntuar">Puntuar</a>
-                                                    </div>
-                                                    <div class="puntuacion col-sm-9 col-sm-offset-1">
-                                                        <div class="row">
-                                                            <div class="col-sm-5">
-                                                                <span style="font-size: 2em;" class="puntuacion">10<small style="font-size: .5em;">pts.</small></span>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <input style="margin-top: 1em;" class="rango" value="10" type="range" min="0" max="10" step=".1" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    </div>
+                                                <div class="col-sm-6">
+                                                    <input style="margin-top: 1em;" class="rango" value="10" type="range" min="0" max="10" step=".1" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             </div>
-                            </div>
-                        </div>                
+                        </div>
                     </div>
                 </div>
             </div>

@@ -39,7 +39,6 @@ app.factory("DataService", function ($http, $q) {
 //Controlador
 app.controller('listasController', function ($scope, DataService) {
 
-
     $scope.cargando = true;
     var estaListo = false;
 
@@ -90,6 +89,15 @@ app.controller('listasController', function ($scope, DataService) {
 
     DataService.obtenerListas().then(function (response) {
         console.log(response);
+        $scope.enlaces = response;
+        Puntuando();
+
+        setTimeout(function () {
+            $("input[type='range']").on("input change", function () {
+                $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
+            });
+        }, 10); 
+
     }, function () { })
 
 
@@ -114,6 +122,7 @@ app.controller('listasController', function ($scope, DataService) {
             return "par";
         return "impar";
     }
+
 });
 
 //Filtros
@@ -161,7 +170,7 @@ var AgregarClases = function () {
             .addClass("panel-success")
             .removeClass("panel-danger panel-warnig panel-info")
             .find("a[class*='btn']").addClass("btn-info");
-    }, 500);
+    }, 100);
 }
 AgregarClases();
 
