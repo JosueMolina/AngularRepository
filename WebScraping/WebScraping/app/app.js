@@ -1,8 +1,7 @@
-﻿var app = angular.module("app", ["ngRoute"]);
+﻿var app = angular.module("app", ["ngRoute", "ngAnimate"]);
 
 //Servicio
 app.factory("DataService", function ($http, $q) {
-
 
     var obtenerListas = function () {
         var deferred = $q.defer();
@@ -29,7 +28,6 @@ app.factory("DataService", function ($http, $q) {
     }
 
     var guardarPuntuacion = function (enlacePuntuado, puntuacion) {
-        console.log("hola Mundo");
         var deferred = $q.defer();
         $http.post("/api/DatosRepositorio/guardarPuntuacion/", { enlacePuntuado: enlacePuntuado, puntuacion : puntuacion }).success(deferred.resolve).error(deferred.reject);
         return deferred.promise;
@@ -96,16 +94,8 @@ app.controller('listasController', function ($scope, DataService) {
     //}
 
     DataService.obtenerListas().then(function (response) {
-        console.log(response);
         $scope.enlaces = response;
-        AgregarClases();
-        Puntuando();
-
-        setTimeout(function () {
-            $("input[type='range']").on("input change", function () {
-                $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
-            });
-        }, 10);
+        InicializarIntervalos();
 
     }, function () { });
 
@@ -121,19 +111,13 @@ app.controller('listasController', function ($scope, DataService) {
         var span = elem.parent(".col-sm-2").parent(".row").find(".col-sm-9").find("span");
         var puntuacionUsuario = span.text().substr(0, span.text().indexOf(' '));
         var enlace = elem.parents(".panel").find(".panel-heading").find("h3").text();
-        console.log(enlace);
-        DataService.guardarPuntuacion(enlace, puntuacionUsuario).then(function () {
-            DataService.obtenerListas().then(function (response) {
-                console.log(response);
-                $scope.enlaces = response;
-                AgregarClases();
-                Puntuando();
 
-                setTimeout(function () {
-                    $("input[type='range']").on("input change", function () {
-                        $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
-                    });
-                }, 10);
+        DataService.guardarPuntuacion(enlace, puntuacionUsuario).then(function () {
+            $(".Items").fadeOut(100);
+
+            DataService.obtenerListas().then(function (response) {
+                $scope.enlaces = response;
+                InicializarIntervalos()
 
             }, function () { });
 
@@ -146,8 +130,7 @@ app.controller('listasController', function ($scope, DataService) {
 
     $scope.setClass = function (index, items)
     {
-        if (index % 2 === 0)
-            return "par";
+        if (index % 2 === 0) return "par";
         return "impar";
     }
 
@@ -180,6 +163,11 @@ app.filter("mySecondFilter", function () {
 });
 
 //Funciones Extras
+var InicializarIntervalos = function(){
+    AgregarClases();
+    Puntuando();
+    Bindings();
+}
 var AgregarClases = function () {
     setTimeout(function () {
         $(".Item.ng-scope.par .col-sm-4:nth-child(odd) .panel")
@@ -200,10 +188,9 @@ var AgregarClases = function () {
             .find("a[class*='btn']").addClass("btn-info");
     }, 500);
 }
-AgregarClases();
 
 var Puntuando = function () {
-    setTimeout(function () {
+    setInterval(function () {
         $(".puntuar").on("click", function () {
             $(this).parents(".panel-body").fadeOut('500', function () {
                 $(this).siblings(".panel-body").fadeIn();
@@ -213,3 +200,12 @@ var Puntuando = function () {
     }, 600);
 }
 
+var Bindings = function () {
+    setTimeout(function () {
+        $("input[type='range']").on("input change", function () {
+            $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span")
+                .html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
+        });
+        $(".Items").fadeIn(1500);
+    }, 10);
+}

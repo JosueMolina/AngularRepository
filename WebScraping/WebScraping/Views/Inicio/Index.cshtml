@@ -43,9 +43,9 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="Items">
+                <div class="Items" style="display: none;">
                     <div class="row Item" data-ng-class="setClass($index, item)" data-ng-repeat="_enlace in (enlaces| myFilter:3)">
-                        <div class="col-sm-4" data-ng-repeat="enlace in (enlaces | mySecondFilter:_enlace:3 | filter:search)">
+                        <div class="col-sm-4"  data-ng-repeat="enlace in (enlaces | mySecondFilter:_enlace:3 | filter:search)">
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3>{{enlace.nombre}}</h3>
@@ -67,7 +67,7 @@
                                         <div class="puntuacion col-sm-9 col-sm-offset-1">
                                             <div class="row">
                                                 <div class="col-sm-5">
-                                                    <span style="font-size: 2em;" class="puntuacion">10<small style="font-size: .5em;">pts.</small></span>
+                                                    <span style="font-size: 2em;" class="puntuacion">10<small style="font-size: .5em;"> pts.</small></span>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <input style="margin-top: 1em;" class="rango" value="10" type="range" min="0" max="10" step=".1" />
@@ -88,6 +88,7 @@
     <script src="~/Scripts/custom.js"></script>
     <script src="~/Scripts/Libs/Angular/angular.min.js"></script>
     <script src="~/Scripts/Libs/Angular/angular-route.min.js"></script>
+    <script src="~/Scripts/Libs/Angular/angular-animate.min.js"></script>
     <script src="~/app/app.js"></script>    
 </body>
 </html>

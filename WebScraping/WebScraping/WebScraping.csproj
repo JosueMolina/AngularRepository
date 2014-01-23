@@ -166,6 +166,7 @@
     </Content>
     <Content Include="Global.asax" />
     <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\Libs\Angular\angular-animate.min.js" />
     <Content Include="Scripts\Libs\Angular\angular.min.js" />
     <Content Include="Scripts\Libs\JQuery\jquery-2.0.3.min.js" />
     <Content Include="Web.config" />
