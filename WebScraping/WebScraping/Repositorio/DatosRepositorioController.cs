@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using System.Xml;
 using System.Net;
 using System.Net.Http;
@@ -18,6 +17,51 @@ namespace WebScraping.Repositorio
 {
     public class DatosRepositorioController : ApiController
     {
+
+        [HttpPost]
+        [ActionName("guardarPuntuacion")]
+        public HttpResponseMessage guardarPuntuacion(guardarPuntuacionObject miObjeto)
+        {
+            
+            Enlaces enlace = BuscarEnlace(miObjeto.enlacePuntuado);
+
+            if (enlace == null || !SumarPuntuacion(miObjeto.puntuacion, enlace.Nombre))
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+
+        }
+
+        private Enlaces BuscarEnlace(string enlace) {
+            using (EnlacesDataBaseEntities _contexto = new EnlacesDataBaseEntities())
+            {
+                return _contexto.Enlaces.Where(e => e.Nombre == enlace).SingleOrDefault();
+            }
+        }
+
+        private bool SumarPuntuacion(double puntuacion, string nombreEnlace){
+            bool sumado = false;
+            using (EnlacesDataBaseEntities _contexto = new EnlacesDataBaseEntities())
+            {
+                try
+                {
+                    decimal puntuacionActual = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).SingleOrDefault().Puntuacion;
+                    int numeroPuntuaciones = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).SingleOrDefault().NumeroPuntuaciones;
+                    decimal nuevaPuntuacion = puntuacionActual + (decimal)puntuacion;
+                    Enlaces enlace = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).SingleOrDefault();
+                    enlace.Puntuacion = nuevaPuntuacion;
+                    enlace.NumeroPuntuaciones++;
+                    _contexto.SaveChanges();
+
+                    sumado = true;
+                }
+                catch (Exception)
+                {
+                }
+                
+            }
+            return sumado;
+        }
 
         public HttpResponseMessage Get(bool localData = true)
         {
@@ -133,5 +177,10 @@ namespace WebScraping.Repositorio
             
         }
 
+    }
+
+    public class guardarPuntuacionObject {
+        public string enlacePuntuado { get; set; }
+        public double puntuacion { get; set; }
     }
 }

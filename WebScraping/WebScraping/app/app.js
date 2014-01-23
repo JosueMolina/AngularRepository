@@ -28,12 +28,20 @@ app.factory("DataService", function ($http, $q) {
         return deferred.promise;
     }
 
+    var guardarPuntuacion = function (enlacePuntuado, puntuacion) {
+        console.log("hola Mundo");
+        var deferred = $q.defer();
+        $http.post("/api/DatosRepositorio/guardarPuntuacion/", { enlacePuntuado: enlacePuntuado, puntuacion : puntuacion }).success(deferred.resolve).error(deferred.reject);
+        return deferred.promise;
+    }
+
     return {
         obtenerListas: obtenerListas,
         guardarEnlaces: guardarEnlaces,
         obtenerListasWeb: obtenerListasWeb,
-        guardarCategorias: guardarCategorias
-     }
+        guardarCategorias: guardarCategorias,
+        guardarPuntuacion : guardarPuntuacion 
+    }
 });
 
 //Controlador
@@ -90,15 +98,16 @@ app.controller('listasController', function ($scope, DataService) {
     DataService.obtenerListas().then(function (response) {
         console.log(response);
         $scope.enlaces = response;
+        AgregarClases();
         Puntuando();
 
         setTimeout(function () {
             $("input[type='range']").on("input change", function () {
                 $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
             });
-        }, 10); 
+        }, 10);
 
-    }, function () { })
+    }, function () { });
 
 
     function replaceAll(text, busca, reemplaza) {
@@ -109,7 +118,26 @@ app.controller('listasController', function ($scope, DataService) {
 
     $scope.enviarPuntuacion = function (e) {
         var elem = angular.element(e.target);
+        var span = elem.parent(".col-sm-2").parent(".row").find(".col-sm-9").find("span");
+        var puntuacionUsuario = span.text().substr(0, span.text().indexOf(' '));
+        var enlace = elem.parents(".panel").find(".panel-heading").find("h3").text();
+        console.log(enlace);
+        DataService.guardarPuntuacion(enlace, puntuacionUsuario).then(function () {
+            DataService.obtenerListas().then(function (response) {
+                console.log(response);
+                $scope.enlaces = response;
+                AgregarClases();
+                Puntuando();
 
+                setTimeout(function () {
+                    $("input[type='range']").on("input change", function () {
+                        $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
+                    });
+                }, 10);
+
+            }, function () { });
+
+        }, function () { });
     }
 
     $scope.KeyDownFiltro = function () {
@@ -170,7 +198,7 @@ var AgregarClases = function () {
             .addClass("panel-success")
             .removeClass("panel-danger panel-warnig panel-info")
             .find("a[class*='btn']").addClass("btn-info");
-    }, 100);
+    }, 500);
 }
 AgregarClases();
 
