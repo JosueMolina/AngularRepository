@@ -15,15 +15,21 @@ app.factory("DataService", function ($http, $q) {
         return deferred.promise;
     }
 
-    var guardarCategorias = function () {
+    var buscarEnlace = function(enlaceNombre){
+        var deferred = $q.defer();
+        $http.get("/api/DatosRepositorio/buscarEnlace?enlaceNombre='" + encodeURIComponent(enlaceNombre) + "'").success(deferred.resolve).error(deferred.reject);
+        return deferred.promise;
+    }
+
+    var guardarCategorias = function (categoria) {
         var deferred = $q.defer();
         $http.post("/api/CategoriasRepositorio/", categoria).success(deferred.resolve).error(deferred.reject);
         return deferred.promise;
     }
 
-    var guardarEnlaces = function (enlace) {
+    var guardarEnlace = function (enlace) {
         var deferred = $q.defer();
-        $http.post("/api/DatosRepositorio/", enlace).success(deferred.resolve).error(deferred.reject)
+        $http.post("/api/DatosRepositorio/Post", enlace).success(deferred.resolve).error(deferred.reject)
         return deferred.promise;
     }
 
@@ -35,10 +41,11 @@ app.factory("DataService", function ($http, $q) {
 
     return {
         obtenerListas: obtenerListas,
-        guardarEnlaces: guardarEnlaces,
+        guardarEnlace: guardarEnlace,
         obtenerListasWeb: obtenerListasWeb,
         guardarCategorias: guardarCategorias,
-        guardarPuntuacion : guardarPuntuacion 
+        guardarPuntuacion : guardarPuntuacion,
+        buscarEnlace : buscarEnlace
     }
 });
 
@@ -48,53 +55,59 @@ app.controller('listasController', function ($scope, DataService) {
     $scope.cargando = true;
     var estaListo = false;
 
-    //if (!estaListo)
-    //{
-    //    DataService.obtenerListasWeb().then
-    //        (function (response) {
-    //            $scope.listas = response.Listas;
-    //            AgregarClases();
-    //            Puntuando();
-    //            var stringJson = JSON.stringify($scope.listas);
-    //            stringJson = replaceAll(stringJson, "#text", "text");
-    //            stringJson = replaceAll(stringJson, "@class", "class");
-    //            stringJson = replaceAll(stringJson, "@name", "name");
-    //            stringJson = replaceAll(stringJson, "@href", "href");
+    if (!estaListo)
+    {
+        DataService.obtenerListasWeb().then(function (response) {
+            $scope.listas = response.Listas;
 
-    //            $scope.listas = JSON.parse(stringJson);
-    //            $scope.cargando = false;
+            InicializarIntervalos();
+
+            var stringJson = JSON.stringify($scope.listas);
+            stringJson = replaceAll(stringJson, "#text", "text");
+            stringJson = replaceAll(stringJson, "@class", "class");
+            stringJson = replaceAll(stringJson, "@name", "name");
+            stringJson = replaceAll(stringJson, "@href", "href");
+
+            $scope.listas = JSON.parse(stringJson);
+            $scope.cargando = false;
                 
 
-    //            $scope.listas.Lista.forEach(function (data) {
-    //                categoria = {};
-    //                categoria.NombreCategoria = data.h2.text;
-    //                DataService.guardarCategorias(categoria).then(function (response) { console.log(response); }, function () { });
-    //                data.ul.li.forEach(function (itemEnlace) {
-    //                    nuevoEnlace = {};
-    //                    nuevoEnlace.Nombre = itemEnlace.a.text;
-    //                    nuevoEnlace.Link = itemEnlace.a.href;
-    //                    nuevoEnlace.NumeroPuntuaciones = 0;
-    //                    nuevoEnlace.Puntuacion = 0;
-    //                    nuevoEnlace.IdCategoria = 1;
-    //                    //DataService.guardarEnlaces(nuevoEnlace);
-    //                })
+            $scope.listas.Lista.forEach(function (data) {
+                  
+                data.ul.li.forEach(function (itemEnlace) {
+                    var nombreEnlace = itemEnlace.a.text;
+                    DataService.buscarEnlace(nombreEnlace).then(function(response){
+                        var encontrado = response.encontrado;
+                        if (!encontrado)
+                        {
+                            nuevoEnlace = {};
+                            nuevoEnlace.Nombre = itemEnlace.a.text;
+                            nuevoEnlace.Link = itemEnlace.a.href;
+                            nuevoEnlace.NumeroPuntuaciones = 0;
+                            nuevoEnlace.Puntuacion = 0;
+                            nuevoEnlace.IdCategoria = 1;
+                            console.log("nuevo : " + nuevoEnlace.Nombre);
+                            DataService.guardarEnlace(nuevoEnlace);
+                        }
+                    }, function(e){console.log("hola")});
 
-    //                estaListo = true;
-    //            });
+                    estaListo = true;
+                });
 
-    //            setTimeout(function () {
-    //                $("input[type='range']").on("input change", function () {
-    //                    $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
-    //                });
+                setTimeout(function () {
+                    $("input[type='range']").on("input change", function () {
+                        $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
+                    });
 
-    //            }, 10); 
-    //        },
-    //         function () { });
+                }, 10); 
+            },
+         function () { });
 
-    //}
-
+        }, function(){})
+     }
     DataService.obtenerListas().then(function (response) {
         $scope.enlaces = response;
+        console.log($scope.enlaces);
         InicializarIntervalos();
 
     }, function () { });

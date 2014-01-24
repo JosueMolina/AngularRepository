@@ -17,26 +17,65 @@ namespace WebScraping.Repositorio
 {
     public class DatosRepositorioController : ApiController
     {
-
         [HttpPost]
         [ActionName("guardarPuntuacion")]
         public HttpResponseMessage guardarPuntuacion(guardarPuntuacionObject miObjeto)
         {
-            
-            Enlaces enlace = BuscarEnlace(miObjeto.enlacePuntuado);
 
-            if (enlace == null || !SumarPuntuacion(miObjeto.puntuacion, enlace.Nombre))
+            if (!busquedaDeEnlace(miObjeto.enlacePuntuado) || 
+                !SumarPuntuacion(miObjeto.puntuacion, miObjeto.enlacePuntuado))
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
             return Request.CreateResponse(HttpStatusCode.OK);
 
         }
 
-        private Enlaces BuscarEnlace(string enlace) {
-            using (EnlacesDataBaseEntities _contexto = new EnlacesDataBaseEntities())
+        //private Enlaces BuscaquedaEnlace(string enlace)
+        //{
+        //    using (EnlacesDataBaseEntities _contexto = new EnlacesDataBaseEntities())
+        //    {
+        //        return _contexto.Enlaces.Where(e => e.Nombre == enlace).SingleOrDefault();
+        //    }
+        //}
+
+        [HttpGet]
+        [ActionName("buscarEnlace")]
+        public HttpResponseMessage buscarEnlace(string enlaceNombre)
+        {
+            try
             {
-                return _contexto.Enlaces.Where(e => e.Nombre == enlace).SingleOrDefault();
+                var response = Request.CreateResponse(HttpStatusCode.OK);
+                string JSON;
+                if (busquedaDeEnlace(enlaceNombre))
+                {
+                    JSON = "{\"encontrado\" : true}";
+                    response.Content = new StringContent(JSON, UTF8Encoding.UTF8, "application/json");
+                }
+                else
+                {
+                    JSON = "{\"encontrado\" : false}";
+                    response.Content = new StringContent(JSON, UTF8Encoding.UTF8, "application/json");
+                }
+                return response;
             }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            
+        }
+
+        private bool busquedaDeEnlace(string enlaceNombre) {
+
+            bool encontrado = false;
+            using (EnlacesDataBaseEntities _cotexto = new EnlacesDataBaseEntities())
+            {
+                enlaceNombre = enlaceNombre.Replace("'", "");
+                Enlaces enlace = _cotexto.Enlaces.FirstOrDefault(e => e.Nombre == enlaceNombre);
+                if (enlace != null)
+                    encontrado = true;
+            }
+            return encontrado;
         }
 
         private bool SumarPuntuacion(double puntuacion, string nombreEnlace){
@@ -45,10 +84,10 @@ namespace WebScraping.Repositorio
             {
                 try
                 {
-                    decimal puntuacionActual = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).SingleOrDefault().Puntuacion;
-                    int numeroPuntuaciones = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).SingleOrDefault().NumeroPuntuaciones;
+                    decimal puntuacionActual = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).FirstOrDefault().Puntuacion;
+                    int numeroPuntuaciones = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).FirstOrDefault().NumeroPuntuaciones;
                     decimal nuevaPuntuacion = puntuacionActual + (decimal)puntuacion;
-                    Enlaces enlace = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).SingleOrDefault();
+                    Enlaces enlace = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).FirstOrDefault();
                     enlace.Puntuacion = nuevaPuntuacion;
                     enlace.NumeroPuntuaciones++;
                     _contexto.SaveChanges();
@@ -78,7 +117,9 @@ namespace WebScraping.Repositorio
 
         }
 
-        public HttpResponseMessage Post(Enlaces enlace)
+        [HttpPost]
+        [ActionName("Post")]
+        public HttpResponseMessage Post([FromBody]Enlaces enlace)
         {
             ModelState.Remove("Id");
 
