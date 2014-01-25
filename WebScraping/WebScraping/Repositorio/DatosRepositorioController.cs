@@ -70,7 +70,6 @@ namespace WebScraping.Repositorio
             bool encontrado = false;
             using (EnlacesDataBaseEntities _cotexto = new EnlacesDataBaseEntities())
             {
-                enlaceNombre = enlaceNombre.Replace("'", "");
                 Enlaces enlace = _cotexto.Enlaces.FirstOrDefault(e => e.Nombre == enlaceNombre);
                 if (enlace != null)
                     encontrado = true;
@@ -86,6 +85,10 @@ namespace WebScraping.Repositorio
                 {
                     decimal puntuacionActual = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).FirstOrDefault().Puntuacion;
                     int numeroPuntuaciones = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).FirstOrDefault().NumeroPuntuaciones;
+                    if (numeroPuntuaciones == 1)
+                    {
+                        numeroPuntuaciones = 1;
+                    }
                     decimal nuevaPuntuacion = puntuacionActual + (decimal)puntuacion;
                     Enlaces enlace = _contexto.Enlaces.Where(e => e.Nombre == nombreEnlace).FirstOrDefault();
                     enlace.Puntuacion = nuevaPuntuacion;

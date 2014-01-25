@@ -33,7 +33,7 @@
                             <legend></legend>
                             <div class="form-group">
                                 <div class="col-lg-12">
-                                    <input data-ng-keydown="KeyDownFiltro()" data-ng-model="search" type="text" class="form-control input-lg" id="inputFiltro" placeholder="Buscar Enlace">
+                                    <input data-ng-keydown="KeyDownFiltro()" data-ng-model="search.nombre" type="text" class="form-control input-lg" id="inputFiltro" placeholder="Buscar Enlace">
                                 </div>
                             </div>
                         </fieldset>
@@ -54,8 +54,9 @@
                                     <div class="col-sm-3">
                                         <a href="{{enlace.link}}" class="btn">Visitar Enlace</a>
                                     </div>
-                                    <div class="puntuacion pull-right col-sm-7 col-sm-offset-1">
-                                        <span style="font-size: 2em; vertical-align: middle;" class="puntuacion">{{ enlace.puntuacion / enlace.numeroPuntuaciones | number:1}} <small style="font-size: .5em;">pts.</small></span>
+                                    <div class="puntuacion pull-right col-sm-7 col-sm-offset-1" data-ng-switch on="enlace.numeroPuntuaciones">
+                                        <span ng-switch-default style="font-size: 2em; vertical-align: middle;" class="puntuacion">{{ enlace.puntuacion / enlace.numeroPuntuaciones | number:1}} <small style="font-size: .5em;">pts.</small></span>
+                                        <span ng-switch-when="1" style="font-size: 2em; vertical-align: middle;" class="puntuacion">----&nbsp;<small style="font-size: .5em;">pts.&nbsp;&nbsp;&nbsp;&nbsp;</small></span>
                                         <button class="btn btn-primary puntuar">Puntuar</button>
                                     </div>
                                 </div>

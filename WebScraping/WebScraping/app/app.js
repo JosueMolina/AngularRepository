@@ -17,7 +17,7 @@ app.factory("DataService", function ($http, $q) {
 
     var buscarEnlace = function(enlaceNombre){
         var deferred = $q.defer();
-        $http.get("/api/DatosRepositorio/buscarEnlace?enlaceNombre='" + encodeURIComponent(enlaceNombre) + "'").success(deferred.resolve).error(deferred.reject);
+        $http.get("/api/DatosRepositorio/buscarEnlace?enlaceNombre=" + encodeURIComponent(enlaceNombre) + "").success(deferred.resolve).error(deferred.reject);
         return deferred.promise;
     }
 
@@ -83,8 +83,8 @@ app.controller('listasController', function ($scope, DataService) {
                             nuevoEnlace = {};
                             nuevoEnlace.Nombre = itemEnlace.a.text;
                             nuevoEnlace.Link = itemEnlace.a.href;
-                            nuevoEnlace.NumeroPuntuaciones = 0;
-                            nuevoEnlace.Puntuacion = 0;
+                            nuevoEnlace.NumeroPuntuaciones = 1;
+                            nuevoEnlace.Puntuacion = 10;
                             nuevoEnlace.IdCategoria = 1;
                             console.log("nuevo : " + nuevoEnlace.Nombre);
                             DataService.guardarEnlace(nuevoEnlace);
@@ -96,7 +96,8 @@ app.controller('listasController', function ($scope, DataService) {
 
                 setTimeout(function () {
                     $("input[type='range']").on("input change", function () {
-                        $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span").html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
+                        $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span")
+                         .html($(this).val() + "<small style='font-size:.5em;'> pts.</small>");
                     });
 
                 }, 10); 
