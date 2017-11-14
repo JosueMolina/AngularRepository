@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="shortcut icon" type='image/x-icon' href="~/Images/favicon.ico" />
+  <title>Todo Angular</title>
+
+  <link href="~/CSS/bootstrap.css" rel="stylesheet" />
+  <link href="~/CSS/styleSheet.css" rel="stylesheet" />
+</head>
+
+<body data-ng-app="app">
+
+  <div class="container" data-ng-controller="linksController">
+
+    @*Jumbotrom*@
+    <header class="row">
+      <div class="col-sm-12 jumbotron">
+        <div class="col-md-6">
+          <h1>Todo Angular</h1>
+          <br />
+          <p>
+            Repository of links to learn everything about the MVW Framework on the client side.
+            Based on the resources list provided by Jeff Cunningham.
+          </p>
+          <br />
+          <p>
+            <a href="https://github.com/jmcunningham/AngularJS-Learning"
+              target="_blank" class="btn btn-primary btn-lg">Browse Repository</a>
+          </p>
+          <br />
+          <p>
+            If you find any of those links very helpful, you can rate them as you estimate its content's value.
+          </p>
+        </div>
+        <div class="jumbotron col-md-6" style="background-color: #c3002f;">
+          <p>
+            <img style="display: block; margin: auto;"
+              src="~/Images/AngularLogo.png" alt="AngularLogo" width="200px" />
+          </p>
+
+          <p style="color: white;">
+            Check this project out on my Github repository and discover how it was done.
+          </p>
+          <a style="white-space: normal;" href="https://github.com/jmcunningham/AngularJS-Learning"
+            target="_blank" class="btn btn-info btn-lg">Browse this project's on Github repository</a>
+        </div>
+
+        @*Search Form*@
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="well">
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend></legend>
+                  <div class="form-group">
+                    <div class="col-lg-12">
+                      <input data-ng-keydown="KeyDownFilter()" data-ng-model="search" type="text"
+                        id="input-search" class="form-control input-lg" placeholder="Search for a link">
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    @*Loader*@
+    <div data-ng-show="loading" class="se-pre-con"></div>
+
+    @*Body*@
+    <div class="row">
+      <div class="col-sm-12">
+        <div data-ng-repeat="list in lists">
+          <div data-ng-repeat="sublist in list">
+
+            @*Loading*@
+            <div class="col-sm-12">
+              <h1>{{sublist.h2.text}}</h1>
+              <hr />
+            </div>
+
+            @*Links*@
+            <div class="items" data-ng-repeat="item in (sublist.ul)">
+              <div class="row item" data-ng-class="setClass($index)" data-ng-repeat="subItem in (item | rowFilter:3)">
+                <div class="col-sm-4" data-ng-repeat="subItem in (item | rowColumnFilter:subItem:3 | filter:search)">
+
+                  @*Link Panel*@
+                  <div class="panel">
+
+                    <div class="panel-heading">
+                      <h3>{{subItem.a.text.indexOf('http') == 0 ? subItem.text : subItem.a.text }}</h3>
+                    </div>
+
+                    <div class="panel-body row">
+                      <div class="col-sm-4">
+                        <a style="display: block;" href="{{subItem.a.href}}" target="_blank" class="btn">Go to Link</a>
+                      </div>
+                      <div class="rate col-sm-8">
+                        <div class="row col-md-12" style="text-align: center;">
+                          <span class="col-md-7 rate"
+                            style="font-size: 2em; vertical-align: middle;">10.00
+                            <small style="font-size: .5em;">pts.</small>
+                          </span>
+
+                          <a style="display: block;" class="col-md-4 btn btn-primary rating-button">Rate</a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="panel-body rating">
+                      <div class="row">
+                        <div class="rate col-sm-9">
+                          <div class="row">
+                            <div class="col-sm-5">
+                              <span style="font-size: 2em;" class="rate">10<small style="font-size: .5em;">pts.</small></span>
+                            </div>
+                            <div class="col-sm-6">
+                              <input style="margin-top: 1em;" value="10" type="range" min="0" max="10" step=".1" />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <a style="display: block;" data-ng-click="enviarPuntuacion($event)" class="btn rating-button">Rate</a>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  @*End Link Panel*@
+
+                </div>
+              </div>
+            </div>
+            @*End Links*@
+
+          </div>
+        </div>
+      </div>
+    </div>
+    @*End Body*@
+
+  </div>
+
+  <script src="~/Scripts/Libs/jQuery/jquery-2.0.3.min.js"></script>
+  <script src="~/Scripts/Libs/Angular/angular.min.js"></script>
+  <script src="~/Scripts/Libs/Angular/angular-route.min.js"></script>
+  <script src="~/Scripts/custom.js"></script>
+  <script src="~/app/app.js"></script>
+  <script src="~/app/services/LinksService.js"></script>
+  <script src="~/app/controllers/LinksController.js"></script>
+
+</body>
+</html>

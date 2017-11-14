@@ -13,10 +13,10 @@ namespace WebScraping.Data
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EnlacesDataBaseEntities : DbContext
+    public partial class AngularRepositoryEntities : DbContext
     {
-        public EnlacesDataBaseEntities()
-            : base("name=EnlacesDataBaseEntities")
+        public AngularRepositoryEntities()
+            : base("name=AngularRepositoryEntities")
         {
         }
     
@@ -25,8 +25,7 @@ namespace WebScraping.Data
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Categorias> Categorias { get; set; }
-        public DbSet<Enlaces> Enlaces { get; set; }
-        public DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Link> Link { get; set; }
     }
 }

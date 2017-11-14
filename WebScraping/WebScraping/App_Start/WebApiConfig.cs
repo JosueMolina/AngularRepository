@@ -10,8 +10,8 @@ namespace WebScraping
         public static void Register(HttpConfiguration config)
         {
 
-            var JsonSettings = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
-            JsonSettings.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            var jsonSettings = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            jsonSettings.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

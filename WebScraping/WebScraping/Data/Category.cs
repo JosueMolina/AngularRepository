@@ -12,15 +12,16 @@ namespace WebScraping.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Enlaces
+    public partial class Category
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Link { get; set; }
-        public int NumeroPuntuaciones { get; set; }
-        public decimal Puntuacion { get; set; }
-        public int IdCategoria { get; set; }
+        public Category()
+        {
+            this.Link = new HashSet<Link>();
+        }
     
-        public virtual Categorias Categorias { get; set; }
+        public int Id { get; set; }
+        public string CategoryName { get; set; }
+    
+        public virtual ICollection<Link> Link { get; set; }
     }
 }

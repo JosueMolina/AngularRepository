@@ -12,12 +12,15 @@ namespace WebScraping.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class sysdiagrams
+    public partial class Link
     {
-        public string name { get; set; }
-        public int principal_id { get; set; }
-        public int diagram_id { get; set; }
-        public Nullable<int> version { get; set; }
-        public byte[] definition { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string LinkValue { get; set; }
+        public Nullable<int> NumberOfRatings { get; set; }
+        public Nullable<decimal> Rating { get; set; }
+        public int IdCategory { get; set; }
+    
+        public virtual Category Category { get; set; }
     }
 }
