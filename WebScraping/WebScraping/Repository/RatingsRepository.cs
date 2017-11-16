@@ -30,7 +30,9 @@ namespace WebScraping.Repository
 
       if (response.Success)
       {
-        return Request.CreateResponse(HttpStatusCode.Created, response.ResponseObject.Rating);
+        decimal rate = (response.ResponseObject.Rating / response.ResponseObject.NumberOfRatings) ?? 0;
+        rate = Math.Ceiling(rate * 100) / 100;
+        return Request.CreateResponse(HttpStatusCode.Created, rate);
       }
 
       return Request.CreateResponse(HttpStatusCode.BadRequest, GetErrorsData());
@@ -55,12 +57,8 @@ namespace WebScraping.Repository
           if (localLink != null)
           {
             localLink.NumberOfRatings = localLink.NumberOfRatings + 1;
+            localLink.Rating += ratingModel.rate;
 
-            decimal actualRate = localLink.Rating ?? 0;
-
-            actualRate = (actualRate + ratingModel.rate) / localLink.NumberOfRatings ?? 0;
-            actualRate = Math.Ceiling(actualRate * 100) / 100;
-            localLink.Rating = actualRate;
             context.SaveChanges();
 
             response.ResponseObject = localLink;
