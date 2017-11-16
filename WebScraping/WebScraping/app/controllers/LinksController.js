@@ -103,9 +103,14 @@
 
     var ratingModel = { 'rate': rate, 'title': title };
 
-    LinksService.rating(ratingModel).then(function (response) 
+    LinksService.rating(ratingModel).then(function (response)
     { 
-      console.log(response); 
+      $elem.parent().parent().parent().siblings('.panel-body.row')
+      .children('.col-sm-8') .children('.col-md-12').children('span').html(response + '<small style="font-size: .5em;">pts.</small>');
+    
+      console.log($elem.parent().parent().parent().siblings('.panel-body.row')
+      .children('.col-sm-8') .children('.col-md-12').children('span'));
+
     }, 
     function()
     {

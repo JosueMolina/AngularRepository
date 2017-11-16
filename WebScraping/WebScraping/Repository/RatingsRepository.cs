@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
@@ -55,7 +56,11 @@ namespace WebScraping.Repository
           {
             localLink.NumberOfRatings = localLink.NumberOfRatings + 1;
 
-            localLink.Rating = (localLink.Rating + ratingModel.rate) / localLink.NumberOfRatings;
+            decimal actualRate = localLink.Rating ?? 0;
+
+            actualRate = (actualRate + ratingModel.rate) / localLink.NumberOfRatings ?? 0;
+            actualRate = Math.Ceiling(actualRate * 100) / 100;
+            localLink.Rating = actualRate;
             context.SaveChanges();
 
             response.ResponseObject = localLink;
