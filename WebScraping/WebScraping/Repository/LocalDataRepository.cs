@@ -13,8 +13,8 @@ namespace WebScraping.Repository
                   Id = e.Id,
                   Name = e.Name,
                   LinkValue = e.LinkValue,
-                  NumberOfRaintings = 1,
-                  Rainting = 1,
+                  NumberOfRatings = 1,
+                  Rating = 1,
                   IdCategory = e.IdCategory
                 }).ToArray();
       }

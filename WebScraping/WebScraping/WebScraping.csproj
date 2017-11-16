@@ -149,9 +149,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\RatingModel.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CategoriesRepositoryController.cs" />
+    <Compile Include="Repository\RatingsRepository.cs" />
     <Compile Include="Repository\LinksRepositoryController.cs" />
     <Compile Include="Models\LinkDTO.cs" />
     <Compile Include="Repository\LocalDataRepository.cs" />

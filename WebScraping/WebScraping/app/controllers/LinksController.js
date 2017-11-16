@@ -91,8 +91,26 @@
 
   }
 
-  $scope.enviarPuntuacion = function (e) {
-    var elem = angular.element(e.target);
+  $scope.rating = function (e) {
+    var $elem = angular.element(e.target);
+    
+    var rate =  $elem.parent().siblings('.rate.col-sm-9')
+                  .children('.row').children('.col-sm-6')
+                  .children('input').val();
+
+    var title = $elem.parent().parent().parent()
+            .siblings('.panel-heading').children('h3').text();
+
+    var ratingModel = { 'rate': rate, 'title': title };
+
+    LinksService.rating(ratingModel).then(function (response) 
+    { 
+      console.log(response); 
+    }, 
+    function()
+    {
+      console.log('There was an error sending the date');
+    });
   }
 
   $scope.KeyDownFilter = function () {

@@ -23,10 +23,17 @@
     return deferred.promise;
   }
 
+  var rating = function (ratingModel) {
+    var deferred = $q.defer();
+    $http.post("/api/RatingsRepository/", ratingModel).success(deferred.resolve).error(deferred.reject);
+    return deferred.promise;
+  }
+
   return {
     getLinksLocal: getLinksLocal,
     addLink: addLink,
     getLinksWeb: getLinksWeb,
-    addCategory: addCategory
+    addCategory: addCategory,
+    rating : rating
   }
 });
