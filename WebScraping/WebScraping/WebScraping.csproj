@@ -167,6 +167,7 @@
     <Content Include="app\services\LinksService.js" />
     <Content Include="CSS\bootstrap.css" />
     <Content Include="CSS\styleSheet.css" />
+    <Content Include="CSS\toastr.css" />
     <Content Include="Data\AngularRepository.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>AngularRepository.edmx</DependentUpon>
@@ -186,6 +187,7 @@
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\Libs\Angular\angular.min.js" />
     <Content Include="Scripts\Libs\jQuery\jquery-2.0.3.min.js" />
+    <Content Include="Scripts\Libs\toastr\toastr.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -26,7 +26,7 @@
     //tempLists = removeBrokenLinks(tempLists);
 
     //Not very effecient, but insert more links 
-    //duplicating this block, don't know why (548)
+    //duplicating this block, don't know why (546)
     tempLists.List.forEach(function(data) {
       data.ul.li.forEach(function(link) {
         if ( link.a.text == undefined
@@ -106,15 +106,16 @@
     LinksService.rating(ratingModel).then(function (response)
     { 
       $elem.parent().parent().parent().siblings('.panel-body.row')
-      .children('.col-sm-8') .children('.col-md-12').children('span').html(response + '<small style="font-size: .5em;">pts.</small>');
-    
-      console.log($elem.parent().parent().parent().siblings('.panel-body.row')
-      .children('.col-sm-8') .children('.col-md-12').children('span'));
+      .children('.col-sm-8').children('.col-md-12').children('span')
+      .html(response + '<small style="font-size: .5em;">pts.</small>');
+
+      toastr.info('The rating has been updated');
 
     }, 
     function()
     {
-      console.log('There was an error sending the date');
+      console.log('There was an error sending the data');
+      toastr.error('There was an error sending the data');
     });
   }
 
@@ -162,6 +163,9 @@ function removeBrokenLinks(jsonLists) {
 
 function buildLink(link, categoryId){
   
+  newLink = {};
+  newLink.Name = link.a.text;
+
   if (link.text != undefined) {
     
     link.text[0] = helper.replaceAll(link.text[0], "[", "");
@@ -170,10 +174,12 @@ function buildLink(link, categoryId){
     link.text[0] = helper.replaceAll(link.text[0], ")", "");
 
     link.text = link.text[0];
+
+    if (link.text.trim().length > 0)
+      newLink.Name = link.text;
+
   }
 
-  newLink = {};
-  newLink.Name = link.a.text;
   newLink.LinkValue = link.a.href;
   newLink.NumberOfRatings = 0;
   newLink.Rating = 0;
