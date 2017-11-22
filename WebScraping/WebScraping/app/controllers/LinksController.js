@@ -1,5 +1,5 @@
-﻿app.controller('linksController', function ($scope, LinksService) {
-
+﻿app.controller('linksController', function ($scope, LinksService) 
+{
   $scope.loading = true;
   var isReady = false;
 
@@ -15,8 +15,8 @@
     });
   }
 
-  function loadLinks(response) {
-
+  function loadLinks(response) 
+  {
     helper.addClasses();
     helper.rating();
 
@@ -58,16 +58,16 @@
 
   };
 
-  function insertNewData(lists){
-
-    lists.List.forEach(function (data) {
+  function insertNewData(lists)
+  {
+    $scope.lists.List.forEach(function (data) {
 
       category = {};
       category.CategoryName = data.h2.text;
 
       LinksService.addCategory(category).then( function(response)
       {
-        addingLinks(response, data);
+        addingLinks(response, data);    
       }, 
       function () 
       { 
@@ -77,40 +77,49 @@
       isReady = true;
 
     });
-
   }
 
-  function addingLinks(response, data){
-    
+  function addingLinks(response, data)
+  {
     category.Id = response.id;
     
-    data.ul.li.forEach(function (link) {
+    data.ul.li.forEach( function (link) 
+    {
       newLink = buildLink(link, category.Id);
-      LinksService.addLink(newLink);
+      LinksService.addLink(newLink).then(function(response){
+        if(response.numberOfRatings == 0)
+        {
+          link.dataRating = -1;
+        } else 
+        {
+          link.dataRating = response.rating / response.numberOfRatings;
+        }
+      }, function(){});
     });
-
   }
 
-  $scope.rating = function (e) {
+  $scope.rating = function (e) 
+  {
     var $elem = angular.element(e.target);
-    
+
     var rate =  $elem.parent().siblings('.rate.col-sm-9')
-                  .children('.row').children('.col-sm-6')
-                  .children('input').val();
+    .children('.row').children('.col-sm-6').children('input').val();
 
     var title = $elem.parent().parent().parent()
-            .siblings('.panel-heading').children('h3').text();
+    .siblings('.panel-heading').children('h3').text();
 
-    var ratingModel = { 'rate': rate, 'title': title };
-
-    LinksService.rating(ratingModel).then(function (response)
+    LinksService.rating (
+      { 
+        'rate': rate,
+       'title': title 
+      }
+    ).then(function (response)
     { 
       $elem.parent().parent().parent().siblings('.panel-body.row')
       .children('.col-sm-8').children('.col-md-12').children('span')
       .html(response + '<small style="font-size: .5em;">pts.</small>');
 
-      toastr.info('The rating has been updated');
-
+      toastr.info('Rating has been updated');
     }, 
     function()
     {
@@ -123,7 +132,8 @@
     helper.addClasses();
   }
 
-  $scope.setClass = function (index) {
+  $scope.setClass = function (index)
+  {
     if (index % 2 === 0)
       return "even";
     return "odd";
@@ -131,8 +141,8 @@
 
 }); //End of angular controller block
 
-function buildJsonList(lists){
-
+function buildJsonList(lists)
+{
   var jsonString = JSON.stringify(lists);
   jsonString = helper.replaceAll(jsonString, "#text", "text");
   jsonString = helper.replaceAll(jsonString, "@class", "class");
@@ -140,12 +150,11 @@ function buildJsonList(lists){
   jsonString = helper.replaceAll(jsonString, "@href", "href");
 
   return JSON.parse(jsonString);
-
 }
 
 //insert fewer links using this method (519~518) 
-function removeBrokenLinks(jsonLists) {
-  
+function removeBrokenLinks(jsonLists) 
+{
   jsonLists.List.forEach(function (data) {
     data.ul.li.forEach(function (link) {
       if ( link.a.text == undefined
@@ -158,11 +167,10 @@ function removeBrokenLinks(jsonLists) {
   });
 
   return jsonLists;
-
 }
 
-function buildLink(link, categoryId){
-  
+function buildLink(link, categoryId)
+{
   newLink = {};
   newLink.Name = link.a.text;
 
@@ -177,7 +185,6 @@ function buildLink(link, categoryId){
 
     if (link.text.trim().length > 0)
       newLink.Name = link.text;
-
   }
 
   newLink.LinkValue = link.a.href;
@@ -185,10 +192,13 @@ function buildLink(link, categoryId){
   newLink.Rating = 0;
   newLink.IdCategory = categoryId;
 
+  //console.log(newLink.Name);
+
   return newLink;
 }
 
-function addEventListeners(){
+function addEventListeners()
+{
   setTimeout( function () {
     $("input[type='range']").on("input change", function () {
       $(this).parent(".col-sm-6").siblings(".col-sm-5").find("span")

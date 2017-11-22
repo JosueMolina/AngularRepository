@@ -23,6 +23,12 @@
     return deferred.promise;
   }
 
+  var gettingRate = function (linkName) {
+    var deferred = $q.defer();
+    $http.get("/api/RatingsRepository?linkName=" + linkName).success(deferred.resolve).error(deferred.reject);
+    return deferred.promise;
+  }
+
   var rating = function (ratingModel) {
     var deferred = $q.defer();
     $http.post("/api/RatingsRepository/", ratingModel).success(deferred.resolve).error(deferred.reject);
@@ -34,6 +40,7 @@
     addLink: addLink,
     getLinksWeb: getLinksWeb,
     addCategory: addCategory,
-    rating : rating
+    gettingRate: gettingRate,
+    rating: rating
   }
 });

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
@@ -75,6 +76,10 @@ namespace WebScraping.Repository
             System.Diagnostics.Trace.TraceInformation("Data Field : {0}, Error Message {1}", validationError.PropertyName, validationError.ErrorMessage);
           }
         }
+      }
+      catch(Exception ex)
+      {
+        //something happened
       }
       
       return response;

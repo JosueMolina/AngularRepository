@@ -100,13 +100,14 @@
                       <div class="col-sm-4">
                         <a style="display: block;" href="{{subItem.a.href}}" target="_blank" class="btn">Go to Link</a>
                       </div>
-                      <div class="rate col-sm-8">
+                      <div data-ng-show="!insertingData" class="rate col-sm-8">
                         <div class="row col-md-12" style="text-align: center;">
-                          <span class="col-md-7 rate"
-                            style="font-size: 2em; vertical-align: middle;">10.00
-                            <small style="font-size: .5em;">pts.</small>
+                          <span ng-show="subItem.dataRating" class="col-md-7 rate"
+                            style="font-size: 2em; vertical-align: middle;"> 
+                            {{subItem.dataRating == -1 ? 'N/A' : (subItem.dataRating | number : 2)}}
+                            <small ng-show="subItem.dataRating != -1" style="font-size: .5em;">pts.</small>
                           </span>
-
+                          <span ng-show="!subItem.dataRating" class="col-md-7 rate"> <img title="Loading rating" src="/Images/Preloader_6.gif"/> </span>
                           <a style="display: block;" class="col-md-4 btn btn-primary rating-button">Rate</a>
                         </div>
                       </div>
