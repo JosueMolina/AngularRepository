@@ -1,4 +1,4 @@
-TodoAngular
+AngularRepository
 ===========
 
 Proyecto SPA realizado con Web API, ASP MVC y AngualrJS, haciendo Web Scraping de diferentes sitios para organizar un repositorio 
