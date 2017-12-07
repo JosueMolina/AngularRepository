@@ -1,7 +1,6 @@
-﻿
-using System.Web.Http;
+﻿using System.Web.Http;
 using Newtonsoft.Json.Serialization;
-namespace WebScraping
+namespace AngularRepository
 {
     public static class WebApiConfig
     {
