@@ -25,7 +25,7 @@
     //insert fewer links using this method (519~518)
     //tempLists = removeBrokenLinks(tempLists);
 
-    //Not very effecient, but insert more links 
+    //Not very efficient, but insert more links 
     //duplicating this block, don't know why (546)
     tempLists.List.forEach(function(data) {
       data.ul.li.forEach(function(link) {
